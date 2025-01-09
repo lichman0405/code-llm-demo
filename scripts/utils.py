@@ -3,7 +3,7 @@ import yaml
 
 def load_config():
     """Load the configuration from the YAML file."""
-    with open("config/config.yaml", "r") as file:
+    with open("config/config.yaml", "r", encoding='utf-8') as file:
         return yaml.safe_load(file)
 
 def ensure_directory(directory):
