@@ -1,10 +1,10 @@
 model_service:
-  api_key: "ollama"      # API 密钥
-  api_base: "http://localhost:11434/v1/"  # 替换为本地 Ollama 地址以支持本地服务
-  model: "qwen2.5-coder:7b-instruct"                    # 模型名称
+  api_key: "ollama"                       # 本地服务无需 API 密钥
+  api_base: "http://localhost:11434/v1"   # Ollama 服务的本地地址
+  model: "qwen2.5-coder:14b"      # Ollama 支持的模型名称
 
 execution_service:
-  url: "http://192.168.100.207:22499/submit_code"
+  url: "http://192.168.100.207:22499/submit_code"  # 代码执行服务的 URL
 
 logging:
   directory: "logs"

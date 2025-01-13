@@ -14,13 +14,12 @@ def construct_prompt(user_input):
     """
     base_prompt = f"""
     Generate a complete Python script based on the following requirements:
-    1. {user_input}
-    2. The script should be executable and produce output directly.
-    3. Enclose the code in a Markdown code block, like this:
-       ```python
-       # Your Python code here
-       ```
-    Note: Return only the code block without explanations or extra text.
+    1. The script should be executable and produce output directly.
+    2. Return only the code block without explanations or extra text.
+    3. DO NOT include any markdown or code block indicators, such as "```python" at the beginning or "```" at the end.
+    4. Make sure the code is properly formatted and indented.
+    
+    Task: {user_input}
     """
     return base_prompt
 
