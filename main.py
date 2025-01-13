@@ -8,6 +8,24 @@ from rich.table import Table
 # Initialize Rich Console
 console = Console()
 
+
+def clean_code_block(text):
+    """
+    Removes code block delimiters (```python and ```).
+
+    Parameters:
+        text (str): The input text containing code block delimiters.
+
+    Returns:
+        str: The cleaned text with delimiters removed.
+    """
+    if text.startswith("```python"):
+        text = text[len("```python"):]
+    if text.endswith("```"):
+        text = text[:-len("```")]
+    return text.strip()
+
+
 def construct_prompt(user_input):
     """
     Construct a clear and concise prompt for the language model.
@@ -15,10 +33,9 @@ def construct_prompt(user_input):
     base_prompt = f"""
     Generate a complete Python script based on the following requirements:
     1. The script should be executable and produce output directly.
-    2. Return only the code block without explanations or extra text.
-    3. DO NOT include any markdown or code block indicators, such as "```python" at the beginning or "```" at the end.
+    2. Return only the code without explanations or extra text.
+    3. DO NOT include any markdown or code block indicators.
     4. Make sure the code is properly formatted and indented.
-    
     Task: {user_input}
     """
     return base_prompt
@@ -58,8 +75,11 @@ def main():
         prompt=prompt,
         api_key=model_config["api_key"],
         api_base=model_config["api_base"],
-        model=model_config["model"]
+        model=model_config["model"],
+        temperature=0.7
     )
+
+    generated_code = clean_code_block(generated_code)
 
     if generated_code:
         console.print(Panel("✅ [bold green]Generated Code:[/bold green]", style="green"))

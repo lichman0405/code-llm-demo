@@ -23,17 +23,13 @@ def execute_code_through_service(code, service_url, timeout=10):
         if response.status_code == 200:
             try:
                 execution_result = response.json()
-                execution_result["error"] = None  # Add "error": None when no errors occur
             except ValueError:
                 # Handle case where response is not valid JSON
-                execution_result = {
-                    "error": "Invalid JSON response from the service",
-                    "details": None
-                }
+                execution_result = {"error": "Invalid JSON response from the service", "details": response.text}
         else:
             execution_result = {
                 "error": f"Service returned status code {response.status_code}",
-                "details": None
+                "details": response.text
             }
 
         # Log the code and execution result
@@ -41,32 +37,22 @@ def execute_code_through_service(code, service_url, timeout=10):
         return execution_result
 
     except requests.exceptions.Timeout:
-        error_message = "Unable to connect to the service: Request timed out."
-        detailed_message = f"Service request timed out: {service_url}"
-        log_to_file("error.log", detailed_message)
+        error_message = "Service request timed out"
+        log_to_file("error.log", f"{error_message}: {service_url}")
         print(f"Error: {error_message}")
-        return {"error": error_message, "details": None}
-
-    except requests.exceptions.ConnectionError as e:
-        error_message = "Unable to connect to the service: Connection refused."
-        detailed_message = f"Connection error: {e}"
-        log_to_file("error.log", detailed_message)
-        print(f"Error: {error_message}")
-        return {"error": error_message, "details": None}
+        return {"error": error_message}
 
     except requests.exceptions.RequestException as e:
-        error_message = "An error occurred while contacting the service."
-        detailed_message = f"Request error: {e}"
-        log_to_file("error.log", detailed_message)
+        error_message = f"Failed to call the service: {e}"
+        log_to_file("error.log", error_message)
         print(f"Error: {error_message}")
-        return {"error": error_message, "details": None}
+        return {"error": error_message}
 
     except Exception as e:
-        error_message = "An unexpected error occurred."
-        detailed_message = f"Unexpected error: {e}"
-        log_to_file("error.log", detailed_message)
+        error_message = f"Unexpected error: {e}"
+        log_to_file("error.log", error_message)
         print(f"Error: {error_message}")
-        return {"error": error_message, "details": None}
+        return {"error": error_message}
 
 
 if __name__ == "__main__":
@@ -74,7 +60,7 @@ if __name__ == "__main__":
     sample_code = """print("Hello from the execution service!")"""
 
     # 服务 URL（从配置文件加载）
-    service_url = "http://192.168.100.207:22499/submit_code"  # Intentionally wrong URL for testing
+    service_url = "http://192.168.100.207:22499/submit_code"
 
     # 调用执行服务
     result = execute_code_through_service(sample_code, service_url)
