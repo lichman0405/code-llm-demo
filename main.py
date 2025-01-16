@@ -89,11 +89,18 @@ def main():
     console.print(Panel(f"📝 [bold blue]Task: {user_input}[/bold blue]", style="blue"))
     loops = int(console.input("[bold blue]Enter the number of loops: [/bold blue]"))
     console.print(Panel(f"🔄 [bold blue]Number of Total loops: {loops}[/bold blue]", style="blue"))
-
+    
+    in_debug_mode = False
+    
     for i in range(loops):
         console.print(Panel(f"🔄 [bold blue]Starting Loop {i+1}[/bold blue]", style="blue"))
-        result = process_task(user_input)
+        if not in_debug_mode:
+            result = process_task(user_input)
+        else:
+            console.print(Panel("🔍 [bold blue]Debugging mode is enabled.[/bold blue]", style="blue"))
+            result = debug_task(result["error"], result["code"], user_input)
 
+        # Handle the result
         if result["status"] == "success":
             display_result(result)
             break
@@ -101,15 +108,8 @@ def main():
             console.print("❗[bold red]Execution service timed out. Exiting...[/bold red]")
             break
         else:
-            console.print(Panel("❌ [bold red]Task failed. Attempting debug...[/bold red]", style="red"))
-            result = debug_task(result["error"], result["code"], user_input)
-
-            if result["status"] == "success":
-                display_result(result)
-                break
-            elif result["timeout"]:
-                console.print("❗[bold red]Execution service timed out during debugging. Exiting...[/bold red]")
-                break
+            console.print(Panel("❌ [bold red]Task failed. Switching to debug mode...[/bold red]", style="red"))
+            in_debug_mode = True  # Switch to debug mode if not successful
 
     console.print(Panel("🚪 [bold yellow]Task ended.[/bold yellow]", style="yellow"))
 
