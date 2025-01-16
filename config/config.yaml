@@ -4,7 +4,7 @@ model_service:
   model: "qwen2.5-coder:14b"      # Ollama 支持的模型名称
 
 execution_service:
-  url: "http://192.168.100.207:22499/submit_code"  # 代码执行服务的 URL
+  url: "http://192.168.100.207:1234/submit_code"  # 代码执行服务的 URL
 
 logging:
   directory: "logs"
