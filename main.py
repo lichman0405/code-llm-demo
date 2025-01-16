@@ -109,6 +109,7 @@ def main():
             break
         else:
             console.print(Panel("❌ [bold red]Task failed. Switching to debug mode...[/bold red]", style="red"))
+            console.print(Panel(f"🚨 [bold red]Error: {result['error']}[/bold red]", style="red"))
             in_debug_mode = True  # Switch to debug mode if not successful
 
     console.print(Panel("🚪 [bold yellow]Task ended.[/bold yellow]", style="yellow"))
